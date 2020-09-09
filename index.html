@@ -42,6 +42,9 @@
                         }
                         this.state = 'Dados apresentados'
                     })
+                    .catch(res => {
+                        this.state = 'Algo deu errado'
+                    })
                 }
             }
         })
