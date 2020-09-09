@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Ferramenta de desempenho HG</h1>
+        <label>Url</label>
+        <input type="text" v-model="url">
+        <button @click="getapi">Buscar API</button>
+        {{ state }}
+        <pre>
+            {{ pagespeed }}
+        </pre>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        
+        var app = new Vue({
+            el: '#app',
+            data: {
+                pagespeed: {},
+                url: 'https://developers.google.com',
+                state: 'Clique para carregar',
+            },
+            methods: {
+                getapi(){
+                    const key = 'AIzaSyAcbeiiNhEwJrSla94CEYqCWXw0ZIHgl04'
+                    const url = this.url
+                    const api = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&key=${key}`
+        
+                    this.state = 'Buscando dados'
+                    axios.get(api)
+                    .then(res => {
+                        this.pagespeed = {
+                            state: 'ok',
+                            data: res.data
+                        }
+                        this.state = 'Dados apresentados'
+                    })
+                }
+            }
+        })
+    </script>
+</body>
+</html>
