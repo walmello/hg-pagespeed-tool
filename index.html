@@ -13,9 +13,29 @@
         <input type="text" v-model="url">
         <button @click="getapi">Buscar API</button>
         {{ state }}
-        <pre>
-            {{ pagespeed }}
-        </pre>
+        <br>
+        <div v-if="state === 'OK'">
+            <h2>Dados do Pagespeed</h2>
+            <dl>
+                <div v-for="value, key in pagespeed.loadingExperience.metrics">
+                    <dt>{{ key }}</dt>
+                    <dd>
+                        {{ value.category }}
+                    </dd>
+                </div>
+                <dt>
+                    Overall
+                </dt>
+                <dd>
+                    {{ value.category }}
+                </dd>
+            </dl>
+
+            <pre>
+                {{ pagespeed.loadingExperience }}
+            </pre>
+            
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script>
@@ -31,18 +51,22 @@
                 getapi(){
                     const key = 'AIzaSyAcbeiiNhEwJrSla94CEYqCWXw0ZIHgl04'
                     const url = this.url
-                    const api = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&key=${key}`
+                    const api = `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&key=${key}&locale=pt-br`
         
                     this.state = 'Buscando dados'
                     axios.get(api)
                     .then(res => {
                         this.pagespeed = res.data
-                        this.state = 'Dados apresentados'
+                        this.state = 'OK'
+                        console.log(this.pagespeed)
                     })
                     .catch(err => {
                         const code = err.message.split(' ')[err.message.split(' ').length - 1]
                         if(code == 400){
                             this.state = 'URL Inválida'
+                        }
+                        if(code == 500){
+                            this.state = 'Página não existe'
                         }
                         else{
                             this.state = 'Erro > ' + err.message
