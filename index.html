@@ -36,14 +36,17 @@
                     this.state = 'Buscando dados'
                     axios.get(api)
                     .then(res => {
-                        this.pagespeed = {
-                            state: 'ok',
-                            data: res.data
-                        }
+                        this.pagespeed = res.data
                         this.state = 'Dados apresentados'
                     })
-                    .catch(res => {
-                        this.state = 'Algo deu errado'
+                    .catch(err => {
+                        const code = err.message.split(' ')[err.message.split(' ').length - 1]
+                        if(code == 400){
+                            this.state = 'URL Inválida'
+                        }
+                        else{
+                            this.state = 'Erro > ' + err.message
+                        }
                     })
                 }
             }
