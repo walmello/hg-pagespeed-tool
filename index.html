@@ -15,21 +15,33 @@
         {{ state }}
         <br>
         <div v-if="state === 'OK'">
-            <h2>Dados do Pagespeed</h2>
-            <dl>
-                <div v-for="value, key in pagespeed.loadingExperience.metrics">
-                    <dt>{{ key }}</dt>
-                    <dd>
-                        {{ value.category }}
-                    </dd>
+            <div v-for="metric in Object.keys(pagespeed)">
+                <div v-if="!pagespeed[metric].length">
+                    <h2>{{metric}}</h2>
+                    <div v-for="sub in Object.keys(pagespeed[metric])">
+                        <div v-if="!pagespeed[metric][sub].length">
+                            <h3>{{ sub }}</h3>
+                            <div v-for="subsub in Object.keys(pagespeed[metric][sub])">
+                                <div v-if="!pagespeed[metric][sub][subsub].length">
+                                    <h4>{{ subsub }}</h4>
+                                    <div v-for="subsubsub in Object.keys(pagespeed[metric][sub][subsub])">
+                                        {{ subsubsub }} -> {{ pagespeed[metric][sub][subsub][subsubsub] }}
+                                    </div>
+                                </div>
+                                <div v-else>
+                                    {{ subsub }} -> {{ pagespeed[metric][sub][subsub] }}
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <p>{{sub}} -> {{ pagespeed[metric][sub] }}</p>                        
+                        </div>
+                    </div>
                 </div>
-                <dt>
-                    Overall
-                </dt>
-                <dd>
-                    {{ value.category }}
-                </dd>
-            </dl>
+                <div v-else>
+                    <p>{{metric}} -> {{ pagespeed[metric] }}</p>
+                </div>
+            </div>
 
             <pre>
                 {{ pagespeed.loadingExperience }}
